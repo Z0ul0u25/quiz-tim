@@ -1,0 +1,9 @@
+# MacOS garbage
+.DS_Store
+*/.DS_Store
+__MACOSX/
+*/.__MACOSX/
+
+# IDE
+.vscode/
+.idea/
