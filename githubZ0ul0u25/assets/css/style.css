@@ -3,19 +3,22 @@
  * @author: Philippe Gourdeau <github.com/Z0ul0u25>
  */
 
-/* IMPORTER D'ABORD LES POLICES DE CARACTÈRES */
-
 /* IMPORTER LES FICHIERS CSS */
+@import url(typo.css);
 @import url(normalize.css);
 @import url(utilitaires.css);
 @import url(base.css);
 @import url(grille.css);
-@import url(typo.css);
 
-/* AJOUTER UNE TABLE DES MATIÈRES POUR POUVOIR NAVIGUER LA CSS*/
+/* TODO AJOUTER UNE TABLE DES MATIÈRES POUR POUVOIR NAVIGUER LA CSS*/
 
-body{
+body {
     background-color: var(--couleur-fond);
+    /* Permet le footer dans le bas de la page si le contenu est trop court */
+    display         : flex;
+    min-height      : 100vh;
+    flex-direction  : column;
+    justify-content : flex-start;
 }
 
 main {
@@ -30,17 +33,48 @@ main {
 
 @media (min-width: 1020px) {
     main {
-        margin: 0 auto;
+        margin   : 0 auto;
         max-width: 1000px;
     }
 }
 
 
-h1,h2,h3,h4,p{
+h1,
+h2,
+h3,
+h4,
+p {
     color: var(--couleur-texte-clair);
 }
 
+#titre {
+    margin: 20px 0;
+}
+
 #titre>* {
+    text-align : center;
+    margin     : 0;
+    line-height: normal;
+}
+
+#principal img {
+    grid-column: 1/5;
+}
+
+#principal p {
+    grid-column: 5/13;
+    align-self : center;
+}
+
+footer {
+    position        : relative;
+    background-color: var(--couleur-fond-clair);
+    /* Permet le footer dans le bas de la page si le contenu est trop court */
+    margin-top      : auto;
+}
+
+footer p {
+    max-width : 1000px;
+    margin    : auto;
     text-align: center;
-    margin: 0;
 }
