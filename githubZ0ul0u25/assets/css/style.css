@@ -9,5 +9,28 @@
 @import url(normalize.css);
 @import url(utilitaires.css);
 @import url(base.css);
+@import url(grille.css);
+@import url(typo.css);
 
 /* AJOUTER UNE TABLE DES MATIÈRES POUR POUVOIR NAVIGUER LA CSS*/
+
+body{
+    background-color: var(--couleur-fond);
+}
+
+main {
+    margin: 0 10px;
+}
+
+@media (min-width: 600px) {
+    main {
+        margin: 0 20px;
+    }
+}
+
+@media (min-width: 1020px) {
+    main {
+        margin: 0 auto;
+        max-width: 1000px;
+    }
+}
