@@ -10,6 +10,8 @@
     --couleur-principale       : #FC4C02;
     --couleur-principale-claire: #F88C5E;
     --couleur-fond             : #10253A;
+    --couleur-texte-clair      : #FFFFFF;
+    --couleur-texte-sombre     : #000000;
 }
 
 /*** Clearfix ***/
