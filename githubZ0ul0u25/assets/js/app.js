@@ -37,3 +37,22 @@ const quiz = {
     validerReponse: function (idReponse) { },
     afficherResultats: function () { }
 };
+
+
+const refForm = document.getElementsByTagName("form")[0];
+const refQuestions = document.getElementsByTagName("fieldset");
+
+function cacherForm() {
+    for (const question of refQuestions) {
+        question.classList.add("cacher");
+    }
+    refForm.classList.add("cacher");
+
+}
+
+function initialisation(){
+    (document.getElementsByTagName("body")[0].classList.contains("js-detector")) ? cacherForm() : null;
+
+}
+
+window.addEventListener("DOMContentLoaded", initialisation, false);
