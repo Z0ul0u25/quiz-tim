@@ -1,11 +1,21 @@
 
 /*** Classe conteneur pour le centrage et l'affichage de la grille en arrière-plan ***/
+
+.conteneur{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.grid_12_de_12{
+    grid-column: 1/3;
+}
+
 @media (min-width: 600px) {
     .conteneur {
         /* margin: 0 auto; */
         max-width: 1000px;
         padding: 0;
-        display: grid;
         grid-template-columns: repeat(12,1fr);
         gap: 20px
         /* Grille 12 colonnes en arrière-plan - Mettre en commentaires après usage */
