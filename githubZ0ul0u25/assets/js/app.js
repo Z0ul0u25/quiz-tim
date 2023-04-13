@@ -33,6 +33,7 @@ const objJSON = {
 
 /* Objet Quiz */
 const quiz = {
+    questionCourante: -1,
     debuterQuiz: function () { },
     validerReponse: function (idReponse) { },
     afficherResultats: function () { }
@@ -41,18 +42,56 @@ const quiz = {
 
 const refForm = document.getElementsByTagName("form")[0];
 const refQuestions = document.getElementsByTagName("fieldset");
+const refPrincipal = document.getElementById("principal");
 
+/**
+ * Affiche la question suivante et cache la question courrante si valide
+ */
+function questionSuivante() {
+    if (quiz.questionCourante++ == -1) {
+        refForm.classList.remove("cacher");
+        refPrincipal.classList.add("cacher");
+    }
+
+    if (refQuestions[quiz.questionCourante] != undefined){
+        refQuestions[quiz.questionCourante].classList.remove("cacher");
+    }
+
+    refQuestions[quiz.questionCourante - 1].classList.add("cacher");
+}
+
+
+/**
+ * cache le formulaire et chaque question individuellement.
+ */
 function cacherForm() {
     for (const question of refQuestions) {
         question.classList.add("cacher");
     }
     refForm.classList.add("cacher");
-
 }
 
-function initialisation(){
-    (document.getElementsByTagName("body")[0].classList.contains("js-detector")) ? cacherForm() : null;
+/**
+ * Ajoute les boutons requis pour être interactif.
+ */
+function ajoutBtnsInteractif() {
+    let btn = document.createElement("button");
+    btn.classList.add("suivant");
+    btn.innerText = "Commencer le Quiz!";
+    btn.addEventListener("click", questionSuivante, false);
+    refPrincipal.appendChild(btn);
+}
 
+function initialisation() {
+    // (document.getElementsByTagName("body")[0].classList.contains("js-detector")) ? setupJS() : null;
+    let btnSuivant = document.querySelector("form>button");
+    btnSuivant.innerText = "Question Suivante";
+    btnSuivant.addEventListener("click", questionSuivante, false);
+
+    refForm.addEventListener("submit", function (e) { e.preventDefault() });
+
+    cacherForm();
+    ajoutBtnsInteractif();
 }
 
 window.addEventListener("DOMContentLoaded", initialisation, false);

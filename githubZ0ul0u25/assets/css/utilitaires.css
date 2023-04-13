@@ -13,6 +13,8 @@
     --couleur-fond-clair       : #4545A3;
     --couleur-texte-clair      : #FFFFFF;
     --couleur-texte-sombre     : #000000;
+
+    --btn-hauteur: 65px
 }
 
 /*** Clearfix ***/

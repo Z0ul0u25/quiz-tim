@@ -156,20 +156,35 @@ fieldset label:nth-of-type(2n){
 
 button{
     background-color: var(--couleur-principale);
-    height: 65px;
+    border: 0;
+    height: var(--btn-hauteur);
     /* font-size: 1.6rem; */
 }
 
-button.confirmer{
+
+button.confirmer, button.suivant{
     grid-column: 2;
-    grid-row: 2;
-    border-radius: 0 32px 32px 0;
+    grid-row: 3;
+    border-radius: 0 calc(var(--btn-hauteur)/2) calc(var(--btn-hauteur)/2) 0;
+    width: 100%;
 }
 
 @media (min-width: 600px){
-    button.confirmer{
+    button.confirmer, button.suivant{
         grid-column: 8/12;
     }
+}
+
+button:hover{
+    border-radius: calc(var(--btn-hauteur)/2);
+}
+
+button:focus{
+    border: 5px solid #5E9ED6
+}
+
+button:active{
+    background-color: var(--couleur-principale-claire);
 }
 
 fieldset.conteneur{
