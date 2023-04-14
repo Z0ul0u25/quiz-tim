@@ -57,7 +57,7 @@ function questionSuivante() {
         refQuestions[quiz.questionCourante].classList.remove("cacher");
     }
 
-    refQuestions[quiz.questionCourante - 1].classList.add("cacher");
+    (quiz.questionCourante != 0)?refQuestions[quiz.questionCourante - 1].classList.add("cacher"):null;
 }
 
 
@@ -82,16 +82,25 @@ function ajoutBtnsInteractif() {
     refPrincipal.appendChild(btn);
 }
 
+/**
+ * Action après le chargement de la page.
+ */
 function initialisation() {
     // (document.getElementsByTagName("body")[0].classList.contains("js-detector")) ? setupJS() : null;
     let btnSuivant = document.querySelector("form>button");
     btnSuivant.innerText = "Question Suivante";
     btnSuivant.addEventListener("click", questionSuivante, false);
-
-    refForm.addEventListener("submit", function (e) { e.preventDefault() });
+    // Évenement pour prévenir l'envoi du formulaire
+    refForm.addEventListener("submit", function (e) { e.preventDefault(); });
 
     cacherForm();
     ajoutBtnsInteractif();
+
+    // Pour je ne sais qu'elle holly reason, avec getElementsByClassName("margin-bottom") ça ne retire pas la classe sur le deuxième élément.
+    for (const element of document.querySelectorAll(".margin-bottom")) {
+        element.classList.remove("margin-bottom");
+    }
+
 }
 
 window.addEventListener("DOMContentLoaded", initialisation, false);

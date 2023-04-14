@@ -187,7 +187,7 @@ button:active{
     background-color: var(--couleur-principale-claire);
 }
 
-fieldset.conteneur{
+.margin-bottom{
     margin-bottom: 100px;
 }
 
