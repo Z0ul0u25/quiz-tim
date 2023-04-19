@@ -80,6 +80,7 @@ function questionSuivante(e) {
             break;
         }
         default:
+            // Question
             break;
     }
 
