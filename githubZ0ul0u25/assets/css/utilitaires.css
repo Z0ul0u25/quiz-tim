@@ -46,7 +46,7 @@ html {
     margin  : -1px;
     overflow: hidden;
     padding : 0;
-    position: absolute;
+    position: fixed; /* Changé depuis "absolute" pour éviter un bug de défillement automatique au choix de réponse*/
     width   : 1px;
 }
 
