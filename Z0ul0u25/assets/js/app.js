@@ -50,6 +50,8 @@ const quiz = {
     },
 
     validerReponse: function (idReponse) {
+        let bonneReponse = objJSON.bonnesReponses[quiz.questionCourante];
+
         let retroaction = document.createElement("div");
         let commentaire1 = document.createElement("p");
         let commentaire2 = document.createElement("p");
@@ -63,21 +65,22 @@ const quiz = {
         refQuestions[this.questionCourante].querySelector(".reponse").classList.remove("conteneur");
         refQuestions[this.questionCourante].querySelector(".reponse").classList.add("flxRow");
 
-        for (const elem of refQuestions[this.questionCourante].querySelectorAll(`[name=Q${quiz.questionCourante + 1}]:not(:checked):not([value=${objJSON.bonnesReponses[quiz.questionCourante]}])`)) {
+        for (const elem of refQuestions[this.questionCourante].querySelectorAll(`[name=Q${quiz.questionCourante + 1}]:not(:checked):not([value=${bonneReponse}])`)) {
             elem.classList.add("cacher");
             elem.nextElementSibling.classList.add("cacher");
         }
 
-        if (idReponse == objJSON.bonnesReponses[this.questionCourante]) {
-            commentaire1.innerText = objJSON.retroactions.positive;
+        idReponse.checked = false;
 
-            // for (const input of document.querySelectorAll(`input[name='Q${quiz.questionCourante + 1}']:not(:checked)+label`) ){
-            //     console.log(input);
-            //     // input.classList.add("grise");
-            // }
+        document.getElementById(`${bonneReponse}`).classList.add("bonne-reponse");
+
+        if (idReponse.value == objJSON.bonnesReponses[this.questionCourante]) {
+            commentaire1.innerText = objJSON.retroactions.positive;
+            //idReponse.classList.add("bonne-reponse");
             this.nbBonneReponse++;
         } else {
             console.log("mauvaise réponse...");
+            idReponse.classList.add("mauvaise-reponse");
 
             commentaire1.innerText = objJSON.retroactions.negative;
         }
@@ -106,7 +109,7 @@ function etapeSuivante(e) {
             quiz.debuterQuiz();
             break;
         case "Vérifier ma réponse": {
-            quiz.validerReponse(document.querySelector(`input[name='Q${quiz.questionCourante + 1}']:checked`).value);
+            quiz.validerReponse(document.querySelector(`input[name='Q${quiz.questionCourante + 1}']:checked`));
             break;
         }
         default:
@@ -168,6 +171,11 @@ function initialisation() {
     // Pour je ne sais qu'elle holly reason, avec getElementsByClassName("margin-bottom") ça ne retire pas la classe sur le deuxième élément.
     for (const element of document.querySelectorAll(".margin-bottom")) {
         element.classList.remove("margin-bottom");
+    }
+
+    // Reset de checked en cache
+    for (const elem of document.querySelectorAll(":checked")){
+        elem.checked = false;
     }
 
 }

@@ -211,6 +211,14 @@ legend{
     justify-content: space-around;
 }
 
+.bonne-reponse+label{
+    border: 5px solid green;
+}
+
+.mauvaise-reponse+label{
+    border: 5px solid red;
+}
+
 .retroaction{
     text-align: center;
 }
