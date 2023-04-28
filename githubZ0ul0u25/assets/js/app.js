@@ -42,14 +42,17 @@ let btnSuivant;
 const quiz = {
     questionCourante: -1,
     nbBonneReponse: 0,
+
     debuterQuiz: function () {
         refForm.classList.remove("cacher");
         refPrincipal.classList.add("cacher");
         refQuestions[++this.questionCourante].classList.remove("cacher");
     },
+
     validerReponse: function (idReponse) {
         if (idReponse == objJSON.bonnesReponses[this.questionCourante]) {
             console.log("Bonne réponse!");
+
             console.log(refQuestions[this.questionCourante]);
             refQuestions[this.questionCourante].classList.add("cacher");
             refQuestions[++this.questionCourante].classList.remove("cacher");
@@ -63,24 +66,26 @@ const quiz = {
         }
         // btnSuivant.innerText = "Question suivante";
     },
-    afficherResultats: function () { }
+
+    // afficherQuestionSuivante: function () {},
+    // afficherResultats: function () { }
 };
 
 /**
  * Affiche la question suivante et cache la question courrante si valide
+ * @param {Event} e Évenement déclancheur.
  */
-function questionSuivante(e) {
+function etapeSuivante(e) {
     switch (e.currentTarget.innerText) {
         case "Commencer le Quiz!":
             quiz.debuterQuiz();
             break;
         case "Vérifier ma réponse": {
-
             quiz.validerReponse(document.querySelector(`input[name='Q${quiz.questionCourante + 1}']:checked`).value);
             break;
         }
         default:
-            // Question
+            // Question suivante
             break;
     }
 
@@ -108,7 +113,7 @@ function ajoutBtnsInteractif() {
     let btn = document.createElement("button");
     btn.classList.add("suivant");
     btn.innerText = "Commencer le Quiz!";
-    btn.addEventListener("click", questionSuivante, false);
+    btn.addEventListener("click", etapeSuivante, false);
     refPrincipal.appendChild(btn);
 }
 
@@ -124,7 +129,7 @@ function initialisation() {
     btnSuivant = document.querySelector("form>button");
     btnSuivant.innerText = "Vérifier ma réponse";
     btnSuivant.setAttribute("disabled", "disabled");
-    btnSuivant.addEventListener("click", questionSuivante, false);
+    btnSuivant.addEventListener("click", etapeSuivante, false);
     // Évenement pour prévenir l'envoi du formulaire
     refForm.addEventListener("submit", function (e) { e.preventDefault(); });
 
