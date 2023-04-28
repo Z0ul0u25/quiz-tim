@@ -150,7 +150,7 @@ fieldset label:nth-of-type(2n){
 }
 
 [type=radio]:checked+label {
-    border: 2px solid #068221;
+    border: 2px solid var(--couleur-principale);
 }
 
 button{
@@ -208,6 +208,11 @@ legend{
 
 .reponse{
     grid-column: 1/3;
+    justify-content: space-around;
+}
+
+.retroaction{
+    text-align: center;
 }
 
 fieldset div:first-of-type{

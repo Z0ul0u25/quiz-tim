@@ -13,7 +13,7 @@ const objJSON = {
         "negative": "Mauvaise réponse..."
     },
     "explications": {
-        "Q1": "LMG gère officiellement 7 chaîne Youtube afin de couvrir les goût de tout le monde : LinusTechTips, Techlinked, ShortCircuit, Techquickie, LMGClips, Channel Super Fun et MAC address.",
+        "Q1": "LMG gère officiellement 7 chaîne Youtube afin de couvrir les goût de tout le monde : LinusTechTips, Techlinked, ShortCircuit, Techquickie, LMGClips, Channel Super Fun et MAC address. Il y a aussi de façon non officiel la chaîne LinusCatTips pour les amoureux des chats",
         "Q2": "En date du 27 février 2022, il y a 59 membres officiels au sein de LMG… et ça n’arrête pas d’augmenter!",
         "Q3": "WAN signifie « Wide Area Network » mieux reconnu comme étant Internet. Le WAN show est présenté depuis plusieurs année par Linus Sebastian et Luke Lafreniere mettant en évidence les nouvelles, petites et grandes, dans le monde des technologies."
     },
@@ -50,12 +50,27 @@ const quiz = {
     },
 
     validerReponse: function (idReponse) {
-        if (idReponse == objJSON.bonnesReponses[this.questionCourante]) {
-            console.log("Bonne réponse!");
+        let retroaction = document.createElement("div");
+        let commentaire1 = document.createElement("p");
+        let commentaire2 = document.createElement("p");
 
-            console.log(refQuestions[this.questionCourante]);
-            refQuestions[this.questionCourante].classList.add("cacher");
-            refQuestions[++this.questionCourante].classList.remove("cacher");
+        retroaction.className = "grid_12_de_12 retroaction";
+        retroaction.append(commentaire1);
+        retroaction.append(commentaire2);
+
+        commentaire2.innerText = objJSON.explications[`Q${quiz.questionCourante + 1}`];
+
+        refQuestions[this.questionCourante].querySelector(".reponse").classList.remove("conteneur");
+        refQuestions[this.questionCourante].querySelector(".reponse").classList.add("flxRow");
+
+        for (const elem of refQuestions[this.questionCourante].querySelectorAll(`[name=Q${quiz.questionCourante + 1}]:not(:checked):not([value=${objJSON.bonnesReponses[quiz.questionCourante]}])`)) {
+            elem.classList.add("cacher");
+            elem.nextElementSibling.classList.add("cacher");
+        }
+
+        if (idReponse == objJSON.bonnesReponses[this.questionCourante]) {
+            commentaire1.innerText = objJSON.retroactions.positive;
+
             // for (const input of document.querySelectorAll(`input[name='Q${quiz.questionCourante + 1}']:not(:checked)+label`) ){
             //     console.log(input);
             //     // input.classList.add("grise");
@@ -63,12 +78,22 @@ const quiz = {
             this.nbBonneReponse++;
         } else {
             console.log("mauvaise réponse...");
+
+            commentaire1.innerText = objJSON.retroactions.negative;
         }
-        // btnSuivant.innerText = "Question suivante";
+        refQuestions[this.questionCourante].append(retroaction);
+        btnSuivant.innerText = (this.questionCourante != 2) ? "Question suivante" : "Afficher les résultats";
     },
 
-    // afficherQuestionSuivante: function () {},
-    // afficherResultats: function () { }
+    afficherQuestionSuivante: function () {
+        refQuestions[this.questionCourante].classList.add("cacher");
+        refQuestions[++this.questionCourante].classList.remove("cacher");
+        btnSuivant.innerText = "Vérifier ma réponse";
+    },
+
+    afficherResultats: function () {
+        console.log("Résultat");
+    }
 };
 
 /**
@@ -85,14 +110,14 @@ function etapeSuivante(e) {
             break;
         }
         default:
-            // Question suivante
+            btnSuivant.setAttribute("disabled", "disabled");
+            quiz.afficherQuestionSuivante();
             break;
     }
 
 
     // (quiz.questionCourante != 0)?refQuestions[quiz.questionCourante - 1].classList.add("cacher"):null;
 
-    btnSuivant.setAttribute("disabled", "disabled");
 }
 
 
