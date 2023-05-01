@@ -41,7 +41,7 @@ let btnSuivant;
 /* Objet Quiz */
 const quiz = {
     questionCourante: -1,
-    nbBonneReponse: 0,
+    bonneReponses: 0,
 
     debuterQuiz: function () {
         refForm.classList.remove("cacher");
@@ -77,9 +77,8 @@ const quiz = {
         if (idReponse.value == objJSON.bonnesReponses[this.questionCourante]) {
             commentaire1.innerText = objJSON.retroactions.positive;
             //idReponse.classList.add("bonne-reponse");
-            this.nbBonneReponse++;
+            this.bonneReponses += Math.pow(2, this.questionCourante);
         } else {
-            console.log("mauvaise réponse...");
             idReponse.classList.add("mauvaise-reponse");
 
             commentaire1.innerText = objJSON.retroactions.negative;
@@ -95,7 +94,47 @@ const quiz = {
     },
 
     afficherResultats: function () {
-        console.log("Résultat");
+        let iconOK = `<svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32.5" cy="32.5" r="32.5" fill="#278805"/>
+        <path d="M26.2755 48.9283L9 32.7324L11.7142 29.8371L26.1865 43.4049L54.5915 15L57.3977 17.806L26.2755 48.9283Z" fill="black"/>`;
+        let iconX = `<svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32.5" cy="32.5" r="32.5" fill="#DC1010"/>
+        <path d="M53.0002 14.6415L50.3585 12L33.0001 29.3584L15.6417 12L13 14.6415L30.3585 32L13 49.3585L15.6417 52L33.0001 34.6416L50.3585 52L53.0002 49.3585L35.6417 32L53.0002 14.6415Z" fill="black"/>
+        </svg>`;
+
+
+
+
+        refQuestions[this.questionCourante].classList.add("cacher");
+        btnSuivant.innerText = "Retour à l'acceuil";
+
+        refPrincipal.classList.remove("cacher");
+        refPrincipal.querySelector("button").remove();
+        refPrincipal.querySelector("p").remove();
+
+        let h2 = document.createElement("h2");
+        h2.innerText = "Résultat:";
+
+        let divResultat = document.createElement("div");
+        divResultat.classList.add("resultat");
+
+        let pResultat = document.createElement("p");
+        pResultat.innerText = `${this.bonneReponses.toString(2).length}/3`;
+
+        let divIcons = document.createElement("div");
+
+        let bonneReponsesBin = this.bonneReponses.toString(2);
+
+        while (bonneReponsesBin.length < 3) bonneReponsesBin = "0" + bonneReponsesBin;
+
+        for (let i = objJSON.bonnesReponses.length - 1; i >= 0 ; i--) {
+            divIcons.innerHTML += ((bonneReponsesBin[i] != "1") ? iconX : iconOK);
+        }
+
+        refPrincipal.append(h2);
+        refPrincipal.append(divResultat);
+        divResultat.append(pResultat);
+        divResultat.append(divIcons);
     }
 };
 
@@ -108,20 +147,26 @@ function etapeSuivante(e) {
         case "Commencer le Quiz!":
             quiz.debuterQuiz();
             break;
-        case "Vérifier ma réponse": {
+        case "Vérifier ma réponse":
             quiz.validerReponse(document.querySelector(`input[name='Q${quiz.questionCourante + 1}']:checked`));
             break;
-        }
+        case "Afficher les résultats":
+            quiz.afficherResultats();
+            break;
+        case "Retour à l'acceuil":
+            window.location.reload();
+            break;
         default:
             btnSuivant.setAttribute("disabled", "disabled");
             quiz.afficherQuestionSuivante();
             break;
     }
-
-
-    // (quiz.questionCourante != 0)?refQuestions[quiz.questionCourante - 1].classList.add("cacher"):null;
-
 }
+
+
+// (quiz.questionCourante != 0)?refQuestions[quiz.questionCourante - 1].classList.add("cacher"):null;
+
+
 
 
 /**
@@ -145,6 +190,9 @@ function ajoutBtnsInteractif() {
     refPrincipal.appendChild(btn);
 }
 
+/**
+ * Désactive le bouton suivant.
+ */
 function choixReponse() {
     btnSuivant.removeAttribute("disabled");
 }
@@ -174,7 +222,7 @@ function initialisation() {
     }
 
     // Reset de checked en cache
-    for (const elem of document.querySelectorAll(":checked")){
+    for (const elem of document.querySelectorAll(":checked")) {
         elem.checked = false;
     }
 
