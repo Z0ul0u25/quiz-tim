@@ -41,21 +41,34 @@ let btnSuivant;
 /* Objet Quiz */
 const quiz = {
     questionCourante: -1,
+    // La valeur sera stocké de façon binaire pour savoir quel question à été bien répondu.
+    // val += questionCourante ^ 2
+    // La première réponse à une valeur de 1, la deuxième de 2, la troisième de 4...
+    // Donc si la 1ere et 3eme réponse sont bonne, la valeur sera de 5.
     bonneReponses: 0,
 
+    /**
+     * Cache la div principal et commence le Quiz
+     */
     debuterQuiz: function () {
         refForm.classList.remove("cacher");
         refPrincipal.classList.add("cacher");
         refQuestions[++this.questionCourante].classList.remove("cacher");
     },
 
+    /**
+     * Vérification de la réponse
+     * @param {Element} idReponse Élément HTML radio sélectionné
+     */
     validerReponse: function (idReponse) {
         let bonneReponse = objJSON.bonnesReponses[quiz.questionCourante];
 
+        // Création des éléments du DOM
         let retroaction = document.createElement("div");
         let commentaire1 = document.createElement("p");
         let commentaire2 = document.createElement("p");
 
+        // Attribution des attributs et contenu
         retroaction.className = "grid_12_de_12 retroaction";
         retroaction.append(commentaire1);
         retroaction.append(commentaire2);
@@ -65,25 +78,29 @@ const quiz = {
         refQuestions[this.questionCourante].querySelector(".reponse").classList.remove("conteneur");
         refQuestions[this.questionCourante].querySelector(".reponse").classList.add("flxRow");
 
+        // Conserve la bonne réponse et la réponse sélectionné. cache les autres.
         for (const elem of refQuestions[this.questionCourante].querySelectorAll(`[name=Q${quiz.questionCourante + 1}]:not(:checked):not([value=${bonneReponse}])`)) {
             elem.classList.add("cacher");
             elem.nextElementSibling.classList.add("cacher");
         }
 
+        // Retire le check
         idReponse.checked = false;
 
         document.getElementById(`${bonneReponse}`).classList.add("bonne-reponse");
 
+        // Ajout du commentaire en conséquance (bon ou mauvais)
         if (idReponse.value == objJSON.bonnesReponses[this.questionCourante]) {
             commentaire1.innerText = objJSON.retroactions.positive;
-            //idReponse.classList.add("bonne-reponse");
             this.bonneReponses += Math.pow(2, this.questionCourante);
         } else {
             idReponse.classList.add("mauvaise-reponse");
-
             commentaire1.innerText = objJSON.retroactions.negative;
         }
+
         refQuestions[this.questionCourante].append(retroaction);
+
+        // Change le texte dans le bouton suivant
         btnSuivant.innerText = (this.questionCourante != 2) ? "Question suivante" : "Afficher les résultats";
     },
 
@@ -94,6 +111,7 @@ const quiz = {
     },
 
     afficherResultats: function () {
+        // Icones de bonne et mauvaise réponse.
         let iconOK = `<svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="32.5" cy="32.5" r="32.5" fill="#278805"/>
         <path d="M26.2755 48.9283L9 32.7324L11.7142 29.8371L26.1865 43.4049L54.5915 15L57.3977 17.806L26.2755 48.9283Z" fill="black"/>`;
@@ -102,16 +120,19 @@ const quiz = {
         <path d="M53.0002 14.6415L50.3585 12L33.0001 29.3584L15.6417 12L13 14.6415L30.3585 32L13 49.3585L15.6417 52L33.0001 34.6416L50.3585 52L53.0002 49.3585L35.6417 32L53.0002 14.6415Z" fill="black"/>
         </svg>`;
 
+        // Nombre de Question dans l'objet JSON
+        let nbQuestions = objJSON.bonnesReponses.length;
 
-
-
+        // Cache le formulaire
         refQuestions[this.questionCourante].classList.add("cacher");
         btnSuivant.innerText = "Retour à l'acceuil";
 
+        // Réaffiche la div principale
         refPrincipal.classList.remove("cacher");
         refPrincipal.querySelector("button").remove();
         refPrincipal.querySelector("p").remove();
 
+        // Création des éléments du DOM
         let h2 = document.createElement("h2");
         h2.innerText = "Résultat:";
 
@@ -119,16 +140,18 @@ const quiz = {
         divResultat.classList.add("resultat");
 
         let pResultat = document.createElement("p");
-        pResultat.innerText = `${this.bonneReponses.toString(2).length}/3`;
+        pResultat.innerText = `${parseInt(this.bonneReponses.toString(2).length/nbQuestions*100)}%`;
 
         let divIcons = document.createElement("div");
 
+        // Conversion en binaire puis en string
         let bonneReponsesBin = this.bonneReponses.toString(2);
-
         while (bonneReponsesBin.length < 3) bonneReponsesBin = "0" + bonneReponsesBin;
 
-        for (let i = objJSON.bonnesReponses.length - 1; i >= 0 ; i--) {
-            divIcons.innerHTML += ((bonneReponsesBin[i] != "1") ? iconX : iconOK);
+        // Si la valeur à l'index `i` == 1, la réponse est bonne. sinon mauvaise.
+        // Décompte à l'envers car dans la string "100" l'index [0] représente la dernière question répondu.
+        for (let i = nbQuestions - 1; i >= 0 ; i--) {
+            divIcons.innerHTML += ((bonneReponsesBin[i] == "1") ? iconOK : iconX);
         }
 
         refPrincipal.append(h2);
@@ -154,20 +177,16 @@ function etapeSuivante(e) {
             quiz.afficherResultats();
             break;
         case "Retour à l'acceuil":
+            // Un refresh de la page pour tout réinitialiser.
             window.location.reload();
             break;
         default:
+            // Désactive le bouton suivant au changement de question.
             btnSuivant.setAttribute("disabled", "disabled");
             quiz.afficherQuestionSuivante();
             break;
     }
 }
-
-
-// (quiz.questionCourante != 0)?refQuestions[quiz.questionCourante - 1].classList.add("cacher"):null;
-
-
-
 
 /**
  * cache le formulaire et chaque question individuellement.
