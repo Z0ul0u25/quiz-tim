@@ -241,6 +241,10 @@ legend {
     justify-content: space-around;
 }
 
+.reponse label{
+    min-width: 25%;
+}
+
 .bonne-reponse+label {
     border: 5px solid green;
 }
