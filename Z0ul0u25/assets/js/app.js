@@ -23,7 +23,7 @@ const objJSON = {
         "Q3_A"
     ],
     "messages": {
-        "resultatsDebut": "Vous avez obtenu un résultat de",
+        "resultatsDebut": "Vous avez obtenu un résultat de ",
         "note0": "Vous ne semblez pas connaître LMG, puis-je vous suggéré un détour sur leurs chaînes Youtube?",
         "note33": "Vous auriez pu faire mieux. Je vous suggère de visiter leurs vidéos sur Youtube",
         "note66": "Bravo, vous avez une bonne connaissance générale de LMG",
@@ -123,6 +123,11 @@ const quiz = {
 
         // Nombre de Question dans l'objet JSON
         let nbQuestions = objJSON.bonnesReponses.length;
+        let note = (this.bonneReponses !== "000")?`${Math.floor(this.bonneReponses.match(/1/g).length/nbQuestions*100)}`:"0";
+
+        let retroaction = document.createElement("div");
+        let commentaire1 = document.createElement("p");
+        let commentaire2 = document.createElement("p");
 
         // Cache le formulaire
         refQuestions[this.questionCourante].classList.add("cacher");
@@ -141,25 +146,30 @@ const quiz = {
         divResultat.classList.add("resultat");
 
         let pResultat = document.createElement("p");
-        pResultat.innerText = (this.bonneReponses !== "000")?`${Math.round(this.bonneReponses.match(/1/g).length/nbQuestions*100)}%`:"0%";
+        pResultat.innerText = note + "%";
         console.log(this.bonneReponses);
 
         let divIcons = document.createElement("div");
 
-        // Conversion en binaire puis en string
-        let bonneReponsesBin = this.bonneReponses.toString(2);
-        while (bonneReponsesBin.length < 3) bonneReponsesBin = "0" + bonneReponsesBin;
-
         // Si la valeur à l'index `i` == 1, la réponse est bonne. sinon mauvaise.
         // Décompte à l'envers car dans la string "100" l'index [0] représente la dernière question répondu.
         for (let i = 0; i < nbQuestions; i++) {
-            divIcons.innerHTML += ((bonneReponsesBin[i] == "1") ? iconOK : iconX);
+            divIcons.innerHTML += ((this.bonneReponses[i] == "1") ? iconOK : iconX);
         }
+
+        commentaire1.innerText = objJSON.messages.resultatsDebut + pResultat.innerText;
+        commentaire2.innerText = objJSON.messages["note" + note.toString()];
 
         refPrincipal.append(h2);
         refPrincipal.append(divResultat);
+        refPrincipal.append(retroaction);
+
         divResultat.append(pResultat);
         divResultat.append(divIcons);
+
+        retroaction.className = "grid_12_de_12 retroaction";
+        retroaction.append(commentaire1);
+        retroaction.append(commentaire2);
     }
 };
 
@@ -188,6 +198,7 @@ function etapeSuivante(e) {
             quiz.afficherQuestionSuivante();
             break;
     }
+    e.currentTarget.blur();
 }
 
 /**
