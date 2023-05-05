@@ -45,7 +45,7 @@ const quiz = {
     // val += questionCourante ^ 2
     // La première réponse à une valeur de 1, la deuxième de 2, la troisième de 4...
     // Donc si la 1ere et 3eme réponse sont bonne, la valeur sera de 5.
-    bonneReponses: 0,
+    bonneReponses: "",
 
     /**
      * Cache la div principal et commence le Quiz
@@ -92,10 +92,11 @@ const quiz = {
         // Ajout du commentaire en conséquance (bon ou mauvais)
         if (idReponse.value == objJSON.bonnesReponses[this.questionCourante]) {
             commentaire1.innerText = objJSON.retroactions.positive;
-            this.bonneReponses += Math.pow(2, this.questionCourante);
+            this.bonneReponses += "1";
         } else {
             idReponse.classList.add("mauvaise-reponse");
             commentaire1.innerText = objJSON.retroactions.negative;
+            this.bonneReponses += "0";
         }
 
         refQuestions[this.questionCourante].append(retroaction);
@@ -140,7 +141,8 @@ const quiz = {
         divResultat.classList.add("resultat");
 
         let pResultat = document.createElement("p");
-        pResultat.innerText = `${parseInt(this.bonneReponses.toString(2).length/nbQuestions*100)}%`;
+        pResultat.innerText = (this.bonneReponses !== "000")?`${Math.round(this.bonneReponses.match(/1/g).length/nbQuestions*100)}%`:"0%";
+        console.log(this.bonneReponses);
 
         let divIcons = document.createElement("div");
 
@@ -150,7 +152,7 @@ const quiz = {
 
         // Si la valeur à l'index `i` == 1, la réponse est bonne. sinon mauvaise.
         // Décompte à l'envers car dans la string "100" l'index [0] représente la dernière question répondu.
-        for (let i = nbQuestions - 1; i >= 0 ; i--) {
+        for (let i = 0; i < nbQuestions; i++) {
             divIcons.innerHTML += ((bonneReponsesBin[i] == "1") ? iconOK : iconX);
         }
 
